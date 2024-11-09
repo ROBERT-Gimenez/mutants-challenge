@@ -1,0 +1,14 @@
+{
+    "go.toolsEnvVars": {
+          "GO111MODULE": "on"
+    },
+    "configurations": [
+    {
+        "name": "Launch Package",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceFolder}"
+    }
+    ]
+}
