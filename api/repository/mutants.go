@@ -15,7 +15,7 @@ import (
 )
 
 type MutantRepository struct {
-	svc *dynamodb.DynamoDB
+	svc models.DynamoDBClient
 }
 
 func NewMutantRepository() (*MutantRepository, error) {
@@ -109,3 +109,4 @@ func (r *MutantRepository) GetMutantStats() (models.MutantStats, error) {
 	
 		return stats, nil
 	}
+	

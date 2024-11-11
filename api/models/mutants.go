@@ -1,5 +1,11 @@
 package models
 
+import "github.com/aws/aws-sdk-go/service/dynamodb"
+
+type DynamoDBClient interface {
+    UpdateItem(input *dynamodb.UpdateItemInput) (*dynamodb.UpdateItemOutput, error)
+	GetItem(input *dynamodb.GetItemInput) (*dynamodb.GetItemOutput, error)
+}
 type Mutants struct {
 	Adn []string  `json:"adn"`
 }

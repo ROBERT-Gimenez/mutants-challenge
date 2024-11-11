@@ -41,7 +41,7 @@ func checkDiagonalMatches(adns []string , evidence *int) {
 
 	for i := 0; i < rows-3; i++ {
 		for j := 0; j < cols-3; j++ {
-			if !mutantDnaBase[rune(adns[i][j])]{
+			if j+3 < cols && i+3 < rows && !mutantDnaBase[rune(adns[i][j])]{
 				continue
 			}
 			if adns[i][j] == adns[i+1][j+1] && adns[i][j] == adns[i+2][j+2] &&
@@ -60,7 +60,7 @@ func checkDiagonalMatches(adns []string , evidence *int) {
 
 	for i := 3; i < rows; i++ {
 		for j := 0; j < cols-3; j++ {
-			if !mutantDnaBase[rune(adns[i][j])]{
+			if j+3 < cols && i+3 < rows && !mutantDnaBase[rune(adns[i][j])]{
 				continue
 			}
 			if adns[i][j] == adns[i-1][j+1] && adns[i][j] == adns[i-2][j+2] &&
@@ -72,36 +72,37 @@ func checkDiagonalMatches(adns []string , evidence *int) {
 			}
 		}
 	}
-	return
 }
 
-func checkRowAndColumn(adns []string , evidence *int) {
-	mutantDnaBase := map[rune]bool{'A': true, 'T': true, 'C': true, 'G': true}
-	for i := len(adns[0]) - 1; i >= 0; i-- {
-		rowTest := false
-		for j := len(adns[i]) - 1; j >= 3; j-- {
+func checkRowAndColumn(adns []string, evidence *int) {
+    mutantDnaBase := map[rune]bool{'A': true, 'T': true, 'C': true, 'G': true}
+    rows := len(adns)
+    if rows == 0 {
+        return
+    }
+    cols := len(adns[0])
 
-			if !mutantDnaBase[rune(adns[i][j])]{
-				continue
-			}
+    for i := 0; i < rows; i++ {
+        rowTest := false
+        for j := 0; j < cols; j++ {
+            if j >= 3 && mutantDnaBase[rune(adns[i][j])] {
+                if !rowTest && adns[i][j] == adns[i][j-1] && adns[i][j] == adns[i][j-2] && adns[i][j] == adns[i][j-3] {
+                    *evidence++
+                    rowTest = true
+                }
+            }
 
-			if !rowTest && adns[i][j] == adns[i][j-1] && adns[i][j-1] == adns[i][j-2] &&
-				adns[i][j-2] == adns[i][j-3] {
-				*evidence++
-				rowTest = true
-			}
-		
-			if adns[j][i] == adns[j-1][i] && adns[j-1][i] == adns[j-2][i] &&
-				adns[j-2][i] == adns[j-3][i] {
-				*evidence++
-			}
-		}
-		if *evidence > 1 {
-			return
-		}
+            if i >= 3 && mutantDnaBase[rune(adns[i][j])] {
+                if adns[i][j] == adns[i-1][j] && adns[i][j] == adns[i-2][j] && adns[i][j] == adns[i-3][j] {
+                    *evidence++
+                }
+            }
 
-	}
-	return
+            if *evidence > 1 {
+                return
+            }
+        }
+    }
 }
 
 func (m MutantService) GetStatsMutant() (models.MutantStats, error) {
